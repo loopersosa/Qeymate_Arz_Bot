@@ -49,6 +49,28 @@ dispatcher = updater.dispatcher
 strat_handler = CommandHandler('start', start)
 dispatcher.add_handler(strat_handler)
 
+gold_price_handler = messagehandler(text="طلا", طلا)
+dispatcher.add_handler(gold_price_handler)
+
+coin_price_handler = messagehandler(text="سکه", سکه)
+dispatcher.add_handler(coin_price_handler)
+
+dollar_price_handler = messagehandler(text="دلار", دلار)
+dispatcher.add_handler(dollar_price_handler)
+
+euro_price_handler = messagehandler(text="یورو", یورو)
+dispatcher.add_handler(euro_price_handler)
+
+pound_price_handler = messagehandler(text="پوند", پوند)
+dispatcher.add_handler(pound_price_handler)
+
+lire_price_handler = messagehandler(text="لیر", لیر)
+dispatcher.add_handler(lire_price_handler)
+
+bitcoin_price_handler = messagehandler(text="بیت کوین", بیت_کوین)
+dispatcher.add_handler(bitcoin_price_handler)
+
+etherium_price_handler = messagehandler(text="اتریوم", اتریوم)
+dispatcher.add_handler(etherium_price_handler)
+
 updater.start_polling()
-
-
