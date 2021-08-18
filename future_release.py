@@ -1,10 +1,4 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging
-
-
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-updater = Updater(token=input("enter your token here: "))
-dispatcher = updater.dispatcher
 
 
 def start(update, context):
@@ -25,11 +19,14 @@ def ethereum():
 
 
 start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
 main_handler = MessageHandler(~Filters.command, main)
-dispatcher.add_handler(main_handler)
 
 
 if __name__ == "__main__":
+    updater = Updater(token=input("enter your token here: "))
     updater.start_polling()
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(main_handler)
+
 
