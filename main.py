@@ -3,7 +3,7 @@ import logging
 
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text = "به ربات قیمت ارز خوش آمدید. \n برای مطلع شدن از قیمت ارز آن را تایپ کنید")
-
+#def help(update )
 def طلا(update, context):
     # read the info from online api
     gold_price = None
@@ -49,28 +49,28 @@ dispatcher = updater.dispatcher
 strat_handler = CommandHandler('start', start)
 dispatcher.add_handler(strat_handler)
 
-gold_price_handler = messagehandler(text="طلا", طلا)
+gold_price_handler = messagehandler("طلا" , طلا)
 dispatcher.add_handler(gold_price_handler)
 
-coin_price_handler = messagehandler(text="سکه", سکه)
+coin_price_handler = messagehandler("سکه", سکه)
 dispatcher.add_handler(coin_price_handler)
 
-dollar_price_handler = messagehandler(text="دلار", دلار)
+dollar_price_handler = messagehandler("دلار", دلار)
 dispatcher.add_handler(dollar_price_handler)
 
-euro_price_handler = messagehandler(text="یورو", یورو)
+euro_price_handler = messagehandler("یورو", یورو)
 dispatcher.add_handler(euro_price_handler)
 
-pound_price_handler = messagehandler(text="پوند", پوند)
+pound_price_handler = messagehandler("پوند", پوند)
 dispatcher.add_handler(pound_price_handler)
 
-lire_price_handler = messagehandler(text="لیر", لیر)
+lire_price_handler = messagehandler("لیر", لیر)
 dispatcher.add_handler(lire_price_handler)
 
-bitcoin_price_handler = messagehandler(text="بیت کوین", بیت_کوین)
+bitcoin_price_handler = messagehandler("بیت کوین", بیت_کوین)
 dispatcher.add_handler(bitcoin_price_handler)
 
-etherium_price_handler = messagehandler(text="اتریوم", اتریوم)
+etherium_price_handler = messagehandler("اتریوم", اتریوم)
 dispatcher.add_handler(etherium_price_handler)
 
 updater.start_polling()
