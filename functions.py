@@ -1,7 +1,4 @@
-# let's write this code in 2 versions: 1. Eng 2. Per
-
-
-# --------------------- FUNCTIONS -----------------------------------
+import requests
 
 def start(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text='send the name of a currency to get its price')
@@ -15,34 +12,76 @@ def help(update, context):
 
 def ethereum():
     """ this command gets the price of ethereum from API and returns it """
-    return "api call not implemented yet"
+    # get the price of etherium, until 2 decimal number, based on US dollar
+    etherium_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=ETHUSDT")
+    ethusdt = format(float(etherium_info.json()["price"]), '.2f')
+    return ethusdt
 
 def bitcoin():
     """ this command gets the price of bitcoin from API and returns it """
-    return "api call not implemented yet"
+    # get the bitcoin price, until 2 decimal number, based on US dollar
+    bitcoin_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT")
+    btcusdt = format(float(bitcoin_info.json()["price"]), '.2f')
+    return btcusdt
 
 def gold():
     """ this command gets the price of gold from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_websites_1("https://www.tgju.org/profile/geram18")
+    return price
 
 def coin():
     """ this command gets the price of coin from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_websites_1("https://www.tgju.org/profile/irec_future")
+    return price
 
 def dollar():
     """ this command gets the price of dollar from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_website_2("https://www.tgju.org/%D9%82%DB%8C%D9%85%D8%AA-%D8%AF%D9%84%D8%A7%D8%B1")
+    return price
 
 def pound():
     """ this command gets the price of pound from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_websites_1("https://www.tgju.org/profile/price_gbp")
+    return price
 
 def euro():
     """ this command gets the price of euro from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_websites_1("https://www.tgju.org/profile/price_eur")
+    return price
 
 def lire():
     """ this command gets the price of lire from API and returns it """
-    return "api call not implemented yet"
+    price = give_price_websites_1("https://www.tgju.org/profile/price_try")
+    return price
+#-------- 3 needed functions to read info from websites, for all except dollar
 
-#------------------------------------------------------------------------------------
+# finds 2nd occurance of نرخ فعلی, this is because of the structure  of that website
+# first نرخ فعلی does not have price near that
+def find_2nd(string, substring):
+   return string.find(substring, string.find(substring) + 1)
+
+# when we found a string that contains price in it (other characters as well),
+#  this will find the price and returns  it
+def find_num(string):
+    number = ''
+    for char in string:
+        if char.isnumeric():
+            number += char
+    return float(number)
+
+# gives a URL and finds the price
+def give_price_websites_1(url):
+    info = requests.get(url).text
+    index = find_2nd(info, "نرخ فعلی")
+    info = info[index:index + 95]
+    price = find_num(info)
+    return price
+
+#-------------------------------------------------------------------------------------------
+# for dollar, as they are 2 kinds if dollar, i had to read this from different source and format
+def give_price_website_2(url):
+    info = requests.get(url).text
+    index = info.find("اعلام شده است")
+    info = info[index-40:index]
+    price = find_num(info)
+    return price
