@@ -48,5 +48,8 @@ def euro():
 def lire():
     """ this command gets the price of lire from API and returns it """
     return "api call not implemented yet"
+'''
+def not_supported(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text="this type of message is not supported")'''
 #------------------------------------------------------------------------------------
 
