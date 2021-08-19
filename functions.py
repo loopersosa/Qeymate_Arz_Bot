@@ -12,10 +12,10 @@ for item in list_of_currencies:
 #print(vertical_list_currencies)
 #--------------------- FUNCTIONS -----------------------------------
 def start(update, context):
-    context.bot.send_mseeage(chat_id=update.effective_chat.id, text='send the name of a currency to get its price')
+    context.bot.send_message(chat_id=update.effective_chat.id, text='send the name of a currency to get its price')
 
 def help(update, context):
-    context.bot.send_mseeage(chat_id=update.effective_chat.id, text='print one of these currencies to get the price\n' + vertical_list_currencies )
+    context.bot.send_message(chat_id=update.effective_chat.id, text='print one of these currencies to get the price\n' + vertical_list_currencies )
 
 def ethereum():
     """ this command gets the price of ethereum from API and returns it """
