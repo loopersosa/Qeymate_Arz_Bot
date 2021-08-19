@@ -1,76 +1,37 @@
-from telegram.ext import Updater, CommandHandler, messagehandler
-import logging
 
-def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text = "به ربات قیمت ارز خوش آمدید. \n برای مطلع شدن از قیمت ارز آن را تایپ کنید")
-#def help(update )
-def طلا(update, context):
-    # read the info from online api
-    gold_price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت طلا: ")
+# let's write this code in 2 versions: 1. Eng 2. Per
 
-def سکه(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت سکه: ")
-
-def دلار(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت دلار: ")
-
-def پوند(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت پوند: ")
-
-def یورو(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت یورو: ")
-
-def لیر(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" تومان"+price+"قیمت لیر: ")
-
-def بیت_کوین(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" دلار"+price+"قیمت بیت کوین: ")
-
-def اتریوم(update, context):
-    price = None
-    context.bot.send_message(chat_id=update.effective_chat.id, text=" دلار"+price+"قیمت اتریوم: ")
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+import functions, logging
 
 # getting token from file
 token_file = open("token.txt", "r")
 tok = token_file.read()
 
-updater = Updater(token=tok, use_context=True)
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+# commands
+start_handler = CommandHandler(['start', 'Start'], functions.start)
+help_handler = CommandHandler(['Help', 'help'], functions.help)
 
-dispatcher = updater.dispatcher
+# main function
+def main(update, context):
+    message = update.message.text
+    if "ethereum" in message.lower():
+        context.bot.send_message(chat_id=update.effective_chat.id, text=ethereum())
 
-strat_handler = CommandHandler('start', start)
-dispatcher.add_handler(strat_handler)
+    else:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="no currency with this name found")
 
-gold_price_handler = CommandHandler("طلا", طلا)
-dispatcher.add_handler(gold_price_handler)
+# messages
+main_handler = MessageHandler(Filters.text & ~Filters.command, main)
 
-coin_price_handler = CommandHandler("سکه", سکه)
-dispatcher.add_handler(coin_price_handler)
+if __name__ == "__main__":
+    updater = Updater(token=tok, use_context=True)
+    updater.start_polling()
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    dispatcher = updater.dispatcher
+    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(main_handler)
 
-dollar_price_handler = CommandHandler("دلار", دلار)
-dispatcher.add_handler(dollar_price_handler)
 
-euro_price_handler = CommandHandler("یورو", یورو)
-dispatcher.add_handler(euro_price_handler)
 
-pound_price_handler = CommandHandler("پوند", پوند)
-dispatcher.add_handler(pound_price_handler)
-
-lire_price_handler = CommandHandler("لیر", لیر)
-dispatcher.add_handler(lire_price_handler)
-
-bitcoin_price_handler = CommandHandler("بیت کوین", بیت_کوین)
-dispatcher.add_handler(bitcoin_price_handler)
-
-etherium_price_handler = CommandHandler("اتریوم", اتریوم)
-dispatcher.add_handler(etherium_price_handler)
-
-updater.start_polling()
