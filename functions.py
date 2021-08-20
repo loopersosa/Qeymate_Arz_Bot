@@ -1,16 +1,17 @@
-import requests, main
+import requests
+from main import users_language
 
 def start(update, context):
     output_persian = "خوش اومدی به قیمت ارز، قیمت چه ارزی رو میخوای بدونی؟"
     output_english = "\nwelcome to Qeymate_Arz, what currency do you wnat to know the price of?"
 
     # decide the language
-    if main.users_language[update.effective_chat.id] == None:
+    if update.effective_chat.id not in users_language.keys():
         # new user
         context.bot.send_message(chat_id=update.effective_chat.id, text="choose your language (P: presian / E: english) ")
     else:
         # not a new user
-        if main.users_language[update.effective_chat.id] == "persian":
+        if users_language[update.effective_chat.id] == "persian":
             # persian
             output = output_persian
         else:
