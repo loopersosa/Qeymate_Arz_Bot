@@ -3,11 +3,18 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import functions, logging
 
+users_language = {}
+
 
 def main(update, context):
     message = update.message.text.lower()
-
-    if "ethereum" in message:
+    if message == "p":
+        users_language[update.effective_chat.id] = "persian"
+        context.bot.send_message(chat_id=update.effective_chat.id, text="زبان فارسی با موفقیت انتخاب شد")
+    elif message == "e":
+        users_language[update.effective_chat.id] = "english"
+        context.bot.send_message(chat_id=update.effective_chat.id, text="English has been set for language")
+    elif "ethereum" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=functions.ethereum())
     elif "bitcoin" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=functions.bitcoin())
@@ -36,8 +43,9 @@ main_handler = MessageHandler(Filters.text & ~Filters.command, main)
 unsupported_message = MessageHandler((~Filters.text) & (~Filters.command), functions.help)
 
 
-if __name__ == "__main__":
 
+
+if __name__ == "__main__":
     # getting token from file
     with open("token.txt", "rt") as token_file:
         tok = token_file.read()
@@ -47,7 +55,7 @@ if __name__ == "__main__":
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(main_handler)
-    
+    dispatcher.add_handler(unsupported_message)
+
     # reporting error
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
