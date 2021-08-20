@@ -22,7 +22,7 @@ def start(update, context):
 
 def help(update, context):
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         # send english help
         list_of_currencies = ['gold', 'dollar', 'etherium', 'bitcoin', 'coin', 'pound', 'euro', 'lire']
         vertical_list_currencies = ''
@@ -30,7 +30,7 @@ def help(update, context):
             vertical_list_currencies += "** " + item.ljust(8) + "\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text='print one of these currencies to get the price\n' + vertical_list_currencies )
 
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         # send persian help
         list_of_currencies = ['طلا', 'دلار', 'اتر', 'بیت کوین', 'سکه', 'پوند', 'یورو', 'لیر']
         vertical_list_currencies = ''
@@ -45,9 +45,9 @@ def ethereum():
     etherium_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=ETHUSDT")
     ethusdt = format(float(etherium_info.json()["price"]), '.2f')
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "etherium : $ " + ethusdt
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " دلار" + ethusdt +"اتریوم : "
 
 def bitcoin():
@@ -56,9 +56,9 @@ def bitcoin():
     bitcoin_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT")
     btcusdt = format(float(bitcoin_info.json()["price"]), '.2f')
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "bitcoin : $ " + btcusdt
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " دلار" + btcusdt + "بیت کوین : "
 
 
@@ -66,9 +66,9 @@ def gold():
     """ this command gets the price of gold from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/geram18")
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "gold(per gram) : " + format(price/10000000, '.3f') + " mTomans"
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " هزارتومان" + format(price/10000000, '.3f') + "طلا : "
 
 def coin():
@@ -85,36 +85,36 @@ def dollar():
     """ this command gets the price of dollar from API and returns it """
     price = give_price_website_2("https://www.tgju.org/%D9%82%DB%8C%D9%85%D8%AA-%D8%AF%D9%84%D8%A7%D8%B1")
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "dollar : " + format(price/10000, '.2f') + " kTomans"
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " هزارتومان" + format(price/10000000, '.3f') + "دلار : "
 
 def pound():
     """ this command gets the price of pound from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_gbp")
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "pound : " + format(price/10000, '.2f') + ' kTomans'
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " هزارتومان" + format(price/10000000, '.3f') + "پوند : "
 
 def euro():
     """ this command gets the price of euro from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_eur")
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "euro : " + format(price/10000, '.2f') + ' kTomans'
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " هزارتومان" + format(price/10000000, '.3f') + "یورو : "
 
 def lire():
     """ this command gets the price of lire from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_try")
 
-    if main.users_language[update.effective_chat.id] == "english":
+    if users_language[update.effective_chat.id] == "english":
         return "lire : " + format(price / 10000, '.2f') + '0' + ' kTomans'
-    elif main.users_language[update.effective_chat.id] == "persian":
+    elif users_language[update.effective_chat.id] == "persian":
         return " هزارتومان" + format(price/10000000, '.3f') + '0' + "لیر : "
 
 #-------- 3 needed functions to read info from websites, for all except dollar
