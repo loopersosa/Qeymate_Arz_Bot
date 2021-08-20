@@ -1,28 +1,50 @@
 import requests
-from main import users_language
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+from telegram.ext import CallbackQueryHandler, PicklePersistence
+
 
 def start(update, context):
-    output_persian = "خوش اومدی به قیمت ارز، قیمت چه ارزی رو میخوای بدونی؟"
-    output_english = "\nwelcome to Qeymate_Arz, what currency do you wnat to know the price of?"
+    persian_output = "خوش اومدی به قیمت ارز، قیمت چه ارزی رو میخوای بدونی؟\n \
+                      لیست ارز ها: /help"
+    english_output = "welcome to Qeymate_Arz, what currency do you wnat to know the price of?\
+                      \nlist of currencies: /help"
+    new_user_output = "choose your language:\n\
+                       زبان خود را انتخاب کنید:"
 
-    # decide the language
-    if update.effective_chat.id not in users_language.keys():
-        # new user
-        context.bot.send_message(chat_id=update.effective_chat.id, text="choose your language (P: presian / E: english) ")
+    if context.user_data.get("lang", None) == "en":
+        context.bot.send_message(chat_id=update.effective_chat.id, text=english_output)
+    elif context.user_data.get("lang", None) == "pe":
+        context.bot.send_message(chat_id=update.effective_chat.id, text=persian_output)
     else:
-        # not a new user
-        if users_language[update.effective_chat.id] == "persian":
-            # persian
-            output = output_persian
-        else:
-            # english
-            output = output_english
+        # new user
+        ikeyboard = [[InlineKeyboardButton(text="English", callback_data="lang_en"),
+                      InlineKeyboardButton(text="Persian", callback_data="lang_pe")]]
+        imarkup = InlineKeyboardMarkup(ikeyboard)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=new_user_output, reply_markup=imarkup)
 
-    context.bot.send_message(chat_id=update.effective_chat.id, text=output)
+def lang(update, context):
+    """ this function will be called when the users chooses a language with inline keyboard
+        it will make a set the "lang" key in user_data dictionary
+        user_data is a dictionary provided by python-telegram-bot
+        more info https://github.com/python-telegram-bot/python-telegram-bot/wiki/Storing-bot%2C-user-and-chat-related-data"""
+
+    query = update.callback_query
+    query.answer()  # according to telegram api, all queries must be answered
+
+    if query.data == "lang_en":
+        query.edit_message_text(text="language set to English")
+        context.user_data["lang"]="en"
+    elif query.data == "lang_pe":
+        query.edit_message_text(text="زبان فارسی انتخاب شد")
+        context.user_data["lang"]="pe"
+    
+    start(update, context)  # this way the user sees the start message after choosing language
 
 def help(update, context):
-
-    if users_language[update.effective_chat.id] == "english":
+    if not context.user_data.get("lang", None):
+        # new user
+        start(update, context)
+    elif context.user_data.get("lang", None) == "en":
         # send english help
         list_of_currencies = ['gold', 'dollar', 'etherium', 'bitcoin', 'coin', 'pound', 'euro', 'lire']
         vertical_list_currencies = ''
@@ -30,48 +52,48 @@ def help(update, context):
             vertical_list_currencies += "** " + item.ljust(8) + "\n"
         context.bot.send_message(chat_id=update.effective_chat.id, text='print one of these currencies to get the price\n' + vertical_list_currencies )
 
-    elif users_language[update.effective_chat.id] == "persian":
+    elif context.user_data.get("lang", None) == "pe":
         # send persian help
         list_of_currencies = ['طلا', 'دلار', 'اتر', 'بیت کوین', 'سکه', 'پوند', 'یورو', 'لیر']
         vertical_list_currencies = ''
         for item in list_of_currencies:
             vertical_list_currencies += "** " + item.ljust(8) + "\n"
-        context.bot.send_message(chat_id=update.effective_chat.id, text='print one of these currencies to get the price\n' + vertical_list_currencies)
+        context.bot.send_message(chat_id=update.effective_chat.id, text='اسم یکی از این ارزها رو بفرست تا قیمتش رو ببینی\n' + vertical_list_currencies)
 
 
-def ethereum():
+def ethereum(lang):
     """ this command gets the price of ethereum from API and returns it """
     # get the price of etherium, until 2 decimal number, based on US dollar
     etherium_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=ETHUSDT")
     ethusdt = format(float(etherium_info.json()["price"]), '.2f')
 
-    if users_language[update.effective_chat.id] == "english":
-        return "etherium : $ " + ethusdt
-    elif users_language[update.effective_chat.id] == "persian":
+    if lang == "en":
+        return "ethereum : $ " + ethusdt
+    elif lang == "pe":
         return " دلار" + ethusdt +"اتریوم : "
 
-def bitcoin():
+def bitcoin(lang):
     """ this command gets the price of bitcoin from API and returns it """
     # get the bitcoin price, until 2 decimal number, based on US dollar
     bitcoin_info = requests.get("https://api.binance.com/api/v3/avgPrice?symbol=BTCUSDT")
     btcusdt = format(float(bitcoin_info.json()["price"]), '.2f')
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "bitcoin : $ " + btcusdt
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " دلار" + btcusdt + "بیت کوین : "
 
 
-def gold():
+def gold(lang):
     """ this command gets the price of gold from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/geram18")
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "gold(per gram) : " + format(price/10000000, '.3f') + " mTomans"
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " هزارتومان" + format(price/10000000, '.3f') + "طلا : "
 
-def coin():
+def coin(lang):
     """ this command gets the price of coin from API and returns it """
     price_1 = give_price_websites_1("https://www.tgju.org/profile/sekeb")
     price_2 = give_price_websites_1("https://www.tgju.org/profile/nim")
@@ -81,40 +103,40 @@ def coin():
     output_3 = "coin-quarter :   " +format(price_3/10000000, '.3f') + " mTomans\n"
     return output_1 + output_2 + output_3
 
-def dollar():
+def dollar(lang):
     """ this command gets the price of dollar from API and returns it """
     price = give_price_website_2("https://www.tgju.org/%D9%82%DB%8C%D9%85%D8%AA-%D8%AF%D9%84%D8%A7%D8%B1")
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "dollar : " + format(price/10000, '.2f') + " kTomans"
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " هزارتومان" + format(price/10000000, '.3f') + "دلار : "
 
-def pound():
+def pound(lang):
     """ this command gets the price of pound from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_gbp")
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "pound : " + format(price/10000, '.2f') + ' kTomans'
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " هزارتومان" + format(price/10000000, '.3f') + "پوند : "
 
-def euro():
+def euro(lang):
     """ this command gets the price of euro from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_eur")
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "euro : " + format(price/10000, '.2f') + ' kTomans'
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " هزارتومان" + format(price/10000000, '.3f') + "یورو : "
 
-def lire():
+def lire(lang):
     """ this command gets the price of lire from API and returns it """
     price = give_price_websites_1("https://www.tgju.org/profile/price_try")
 
-    if users_language[update.effective_chat.id] == "english":
+    if lang == "en":
         return "lire : " + format(price / 10000, '.2f') + '0' + ' kTomans'
-    elif users_language[update.effective_chat.id] == "persian":
+    elif lang == "pe":
         return " هزارتومان" + format(price/10000000, '.3f') + '0' + "لیر : "
 
 #-------- 3 needed functions to read info from websites, for all except dollar
