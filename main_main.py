@@ -65,6 +65,17 @@ def help(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id,
                                  text='اسم یکی از این ارزها رو بفرست تا قیمتش رو ببینی\n' + vertical_list_currencies)
 
+def language_choose(update, context):
+    # this function lets user to change the language whenever (s)he desired
+    inline_keyboard_buttons = [[InlineKeyboardButton(text="English", callback_data="en")],
+                               [InlineKeyboardButton(text="فارسی", callback_data="pe")]]
+    # creating the keyboard using two buttons
+    creating_inline_keyboard = InlineKeyboardMarkup(inline_keyboard_buttons)
+
+    text_for_choosing_lan = "choose your language:\n\
+                       زبان خود را انتخاب کنید:"
+
+    context.bot.send_message(chat_id=update.effective_chat.id,text=text_for_choosing_lan , reply_markup=creating_inline_keyboard)
 
 def ethereum(lang):
     """ this command gets the price of ethereum from API and returns it """
@@ -75,7 +86,7 @@ def ethereum(lang):
     if lang == "en":
         return "ethereum : $ " + ethusdt
     elif lang == "pe":
-        return " دلار" + ethusdt + "اتریوم : "
+        return  "اتریوم : " + " دلار " + ethusdt
 
 
 def bitcoin(lang):
@@ -87,7 +98,7 @@ def bitcoin(lang):
     if lang == "en":
         return "bitcoin : $ " + btcusdt
     elif lang == "pe":
-        return " دلار" + btcusdt + "بیت کوین : "
+        return  "اتریوم : " + " دلار " + btcusdt
 
 
 def gold(lang):
@@ -97,7 +108,7 @@ def gold(lang):
     if lang == "en":
         return "gold(per gram) : " + format(price / 10000000, '.3f') + " mTomans"
     elif lang == "pe":
-        return " هزارتومان" + format(price / 10000000, '.3f') + "طلا : "
+        return "طلا : " + " میلیون تومان " + format(price / 10000000, '.3f')
 
 
 def coin(lang):
@@ -112,9 +123,9 @@ def coin(lang):
         output_3 = "coin-quarter :   " + format(price_3 / 10000000, '.3f') + " mTomans\n"
     elif lang == "pe":
         out_put_0 = "**سکه**\n"
-        out_put_1 = " میلیون تومان" + format(price_1 / 10000000, '.3f') + "سکه تمام بهار آزادی : \n"
-        out_put_1 = " میلیون تومان" + format(price_1 / 10000000, '.3f') + "نیم سکه : \n"
-        out_put_1 = " میلیون تومان" + format(price_1 / 10000000, '.3f') + "ربع سکه : \n"
+        output_1 = "سکه تمام بهار آزادی : " + format(price_1 / 10000000, '.3f') + " میلیون تومان \n"
+        output_2 = "نیم سکه : " + format(price_2 / 10000000, '.3f') + " میلیون تومان \n"
+        output_3 = "ربع سکه : " + format(price_3 / 10000000, '.3f') + " میلیون تومان \n"
     return out_put_0 + output_1 + output_2 + output_3
 
 
@@ -125,7 +136,7 @@ def dollar(lang):
     if lang == "en":
         return "dollar : " + format(price / 10000, '.2f') + " kTomans"
     elif lang == "pe":
-        return " هزارتومان" + format(price / 10000000, '.3f') + "دلار : "
+        return "دلار : " + " هزارتومان " + format(price / 10000, '.3f')
 
 
 def pound(lang):
@@ -135,7 +146,7 @@ def pound(lang):
     if lang == "en":
         return "pound : " + format(price / 10000, '.2f') + ' kTomans'
     elif lang == "pe":
-        return " هزارتومان" + format(price / 10000000, '.3f') + "پوند : "
+        return "پوند : " + " هزارتومان " + format(price / 10000, '.3f')
 
 
 def euro(lang):
@@ -145,7 +156,7 @@ def euro(lang):
     if lang == "en":
         return "euro : " + format(price / 10000, '.2f') + ' kTomans'
     elif lang == "pe":
-        return " هزارتومان" + format(price / 10000000, '.3f') + "یورو : "
+        return "یورو : " + " هزارتومان " + format(price / 10000, '.3f')
 
 
 def lire(lang):
@@ -155,7 +166,7 @@ def lire(lang):
     if lang == "en":
         return "lire : " + format(price / 10000, '.2f') + '0' + ' kTomans'
     elif lang == "pe":
-        return " هزارتومان" + format(price / 10000000, '.3f') + '0' + "لیر : "
+        return "لیر : " + " هزارتومان " + format(price / 10000, '.3f')
 
 
 # -------- 3 needed functions to read info from websites, for all except dollar
@@ -199,21 +210,21 @@ def give_price_website_2(url):
 def main(update, context):
 
     message = update.message.text.lower()
-    if "ethereum" in message:
+    if "ethereum" in message or "اتر" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=ethereum(context.user_data.get("lang", None)))
-    elif "bitcoin" in message:
+    elif "bitcoin" in message or "بیتکوین" in message or "بیت کوین" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=bitcoin(context.user_data.get("lang", None)))
-    elif "coin" in message:
+    elif "coin" in message or "سکه" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=coin(context.user_data.get("lang", None)))
-    elif "dollar" in message:
+    elif "dollar" in message or "دلار" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=dollar(context.user_data.get("lang", None)))
-    elif "euro" in message:
+    elif "euro" in message or "یورو" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=euro(context.user_data.get("lang", None)))
-    elif "gold" in message:
+    elif "gold" in message or "طلا" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=gold(context.user_data.get("lang", None)))
-    elif "pound" in message:
+    elif "pound" in message or "پوند" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=pound(context.user_data.get("lang", None)))
-    elif "lire" in message:
+    elif "lire" in message or "لیر" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=lire(context.user_data.get("lang", None)))
     else:
         if context.user_data.get("lang", None) == "pe":
@@ -227,6 +238,7 @@ def main(update, context):
 start_handler = CommandHandler(['start', 'Start'], start)
 help_handler = CommandHandler(['Help', 'help'], help)
 
+
 # messages
 main_handler = MessageHandler(Filters.text & ~Filters.command, main)
 unsupported_message = MessageHandler((~Filters.text) & (~Filters.command), help)
@@ -234,6 +246,8 @@ unsupported_message = MessageHandler((~Filters.text) & (~Filters.command), help)
 # query
 language = CallbackQueryHandler(lang)
 
+# command for changing language
+language_choose_handler = CommandHandler(["language", "Language"], language_choose)
 
 if __name__ == "__main__":
     # getting token from file
@@ -244,9 +258,11 @@ if __name__ == "__main__":
     dispatcher = updater.dispatcher
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(help_handler)
+    dispatcher.add_handler(language_choose_handler)
     dispatcher.add_handler(main_handler)
     dispatcher.add_handler(unsupported_message)
     dispatcher.add_handler(language)
+
 
     # reporting error
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
