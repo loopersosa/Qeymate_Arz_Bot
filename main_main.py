@@ -17,9 +17,9 @@ def start(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=persian_output)
     else:
         # new user
-        ikeyboard = [[InlineKeyboardButton(text="English", callback_data="lang_en"),
+        ikeyboard_button = [[InlineKeyboardButton(text="English", callback_data="lang_en"),
                       InlineKeyboardButton(text="Persian", callback_data="lang_pe")]]
-        imarkup = InlineKeyboardMarkup(ikeyboard)
+        imarkup = InlineKeyboardMarkup(ikeyboard_button)
         context.bot.send_message(chat_id=update.effective_chat.id, text=new_user_output, reply_markup=imarkup)
 
 
@@ -199,21 +199,21 @@ def main(update, context):
 
     message = update.message.text.lower()
     if "ethereum" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=ethereum())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=ethereum(context.user_data.get("lang", None)))
     elif "bitcoin" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=bitcoin())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=bitcoin(context.user_data.get("lang", None)))
     elif "coin" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=coin())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=coin(context.user_data.get("lang", None)))
     elif "dollar" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=dollar())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=dollar(context.user_data.get("lang", None)))
     elif "euro" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=euro())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=euro(context.user_data.get("lang", None)))
     elif "gold" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=gold())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=gold(context.user_data.get("lang", None)))
     elif "pound" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=pound())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=pound(context.user_data.get("lang", None)))
     elif "lire" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=lire())
+        context.bot.send_message(chat_id=update.effective_chat.id, text=lire(context.user_data.get("lang", None)))
     else:
         context.bot.send_message(chat_id=update.effective_chat.id, text="no currency with this name found")
 
@@ -239,6 +239,7 @@ if __name__ == "__main__":
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(main_handler)
     dispatcher.add_handler(unsupported_message)
+    dispatcher.add_handler(CallbackQueryHandler(lang))
 
     # reporting error
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
