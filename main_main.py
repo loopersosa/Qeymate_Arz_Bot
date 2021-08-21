@@ -17,8 +17,9 @@ def start(update, context):
         context.bot.send_message(chat_id=update.effective_chat.id, text=persian_output)
     else:
         # new user
-        ikeyboard_button = [[InlineKeyboardButton(text="English", callback_data="lang_en"),
-                      InlineKeyboardButton(text="Persian", callback_data="lang_pe")]]
+        # creataing list of two buttons with specefic call back info
+        ikeyboard_button = [[InlineKeyboardButton(text="English", callback_data="en"),
+                      InlineKeyboardButton(text="Persian", callback_data="pe")]]
         imarkup = InlineKeyboardMarkup(ikeyboard_button)
         context.bot.send_message(chat_id=update.effective_chat.id, text=new_user_output, reply_markup=imarkup)
 
@@ -32,10 +33,10 @@ def lang(update, context):
     query = update.callback_query
     query.answer()  # according to telegram api, all queries must be answered
 
-    if query.data == "lang_en":
+    if query.data == "en":
         query.edit_message_text(text="language set to English")
         context.user_data["lang"] = "en"
-    elif query.data == "lang_pe":
+    elif query.data == "pe":
         query.edit_message_text(text="زبان فارسی انتخاب شد")
         context.user_data["lang"] = "pe"
 
@@ -215,7 +216,10 @@ def main(update, context):
     elif "lire" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=lire(context.user_data.get("lang", None)))
     else:
-        context.bot.send_message(chat_id=update.effective_chat.id, text="no currency with this name found")
+        if text=lire(context.user_data.get("lang", None)) == "pe":
+            context.bot.send_message(chat_id=update.effective_chat.id, text="ارزی به این نام یافت نشد")
+        else :
+            context.bot.send_message(chat_id=update.effective_chat.id, text="no currency with this name found")
 
 # ------------------------- working with telegram API -------------------------------------------
 
@@ -226,6 +230,9 @@ help_handler = CommandHandler(['Help', 'help'], help)
 # messages
 main_handler = MessageHandler(Filters.text & ~Filters.command, main)
 unsupported_message = MessageHandler((~Filters.text) & (~Filters.command), help)
+
+# query
+language = CallbackQueryHandler((Filters.text == "en") or (Filters.text == "pe"), lang)
 
 
 if __name__ == "__main__":
@@ -239,7 +246,7 @@ if __name__ == "__main__":
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(main_handler)
     dispatcher.add_handler(unsupported_message)
-    dispatcher.add_handler(CallbackQueryHandler(lang))
+    dispatcher.add_handler(language)
 
     # reporting error
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
