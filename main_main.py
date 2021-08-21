@@ -216,7 +216,7 @@ def main(update, context):
     elif "lire" in message:
         context.bot.send_message(chat_id=update.effective_chat.id, text=lire(context.user_data.get("lang", None)))
     else:
-        if text=lire(context.user_data.get("lang", None)) == "pe":
+        if context.user_data.get("lang", None) == "pe":
             context.bot.send_message(chat_id=update.effective_chat.id, text="ارزی به این نام یافت نشد")
         else :
             context.bot.send_message(chat_id=update.effective_chat.id, text="no currency with this name found")
@@ -232,7 +232,7 @@ main_handler = MessageHandler(Filters.text & ~Filters.command, main)
 unsupported_message = MessageHandler((~Filters.text) & (~Filters.command), help)
 
 # query
-language = CallbackQueryHandler((Filters.text == "en") or (Filters.text == "pe"), lang)
+language = CallbackQueryHandler(lang)
 
 
 if __name__ == "__main__":
