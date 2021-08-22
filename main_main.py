@@ -1,20 +1,22 @@
-import requests, logging
+import requests, logging, emoji
+import telegram
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CallbackQueryHandler, PicklePersistence, CommandHandler, MessageHandler, Filters, Updater
 
 
 def start(update, context):
-    persian_output = "خوش اومدی به قیمت ارز، قیمت چه ارزی رو میخوای بدونی؟\n \
+    name_gretting = update.effective_user.first_name + emoji.emojize(":waving_hand:\n\n")
+    persian_output = "خوش اومدی به قیمت ارز، قیمت چه ارزی رو میخوای بدونی؟\n\n\n \
                       لیست ارز ها: /help"
     english_output = "welcome to Qeymate_Arz, what currency do you wnat to know the price of?\
-                      \nlist of currencies: /help"
+                      \n\n\nlist of currencies: /help"
     new_user_output = "choose your language:\n\
                        زبان خود را انتخاب کنید:"
 
     if context.user_data.get("lang", None) == "en":
-        context.bot.send_message(chat_id=update.effective_chat.id, text=english_output)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=name_gretting + english_output)
     elif context.user_data.get("lang", None) == "pe":
-        context.bot.send_message(chat_id=update.effective_chat.id, text=persian_output)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=name_gretting + persian_output)
     else:
         # new user
         # creataing list of two buttons with specefic call back info
@@ -50,16 +52,14 @@ def help(update, context):
     elif context.user_data.get("lang", None) == "en":
         # send english help
         list_of_currencies = ['gold', 'dollar', 'etherium', 'bitcoin', 'coin', 'pound', 'euro', 'lire']
-        vertical_list_currencies = ''
-        for item in list_of_currencies:
-            vertical_list_currencies += "** " + item.ljust(8) + "\n"
-        context.bot.send_message(chat_id=update.effective_chat.id,
-                                 text='print one of these currencies to get the price\n' + vertical_list_currencies)
+        vertical_list_currencies = emoji.emojize(" :yellow_circle: gold\n") + emoji.emojize(" :United_States: dollar\n") + emoji.emojize(" :gem_stone: etherium\n") +emoji.emojize(" :money_bag: bitcoin\n") + emoji.emojize(" :Iran: coin\n") + emoji.emojize(" :United_Kingdom: pound\n") +emoji.emojize(" :European_Union: euro\n") + emoji.emojize(" :Turkey: lire\n")
+
+        context.bot.send_message(chat_id=update.effective_chat.id, text='print one of these currencies to get the price : \n\n' + vertical_list_currencies)
 
     elif context.user_data.get("lang", None) == "pe":
         # send persian help
         list_of_currencies = ['طلا', 'دلار', 'اتر', 'بیت کوین', 'سکه', 'پوند', 'یورو', 'لیر']
-        vertical_list_currencies = ''
+        vertical_list_currencies = ""
         for item in list_of_currencies:
             vertical_list_currencies += "** " + item.ljust(8) + "\n"
         context.bot.send_message(chat_id=update.effective_chat.id,
@@ -118,9 +118,10 @@ def coin(lang):
     price_3 = give_price_websites_1("https://www.tgju.org/profile/rob")
 
     if lang == "en":
-        output_1 = "*Coin*\n\n              coin : " + format(price_1 / 10000000, '.3f') + " mTomans\n"
+        output_1 = "Coin\n\n              coin : " + format(price_1 / 10000000, '.3f') + " mTomans\n"
         output_2 = "      coin-half :   " + format(price_2 / 10000000, '.3f') + " mTomans\n"
         output_3 = "coin-quarter :   " + format(price_3 / 10000000, '.3f') + " mTomans\n"
+        return output_1 + output_2 + output_3
     elif lang == "pe":
         out_put_0 = "**سکه**\n"
         output_1 = "سکه تمام بهار آزادی : " + format(price_1 / 10000000, '.3f') + " میلیون تومان \n"
@@ -211,21 +212,21 @@ def main(update, context):
 
     message = update.message.text.lower()
     if "ethereum" in message or "اتر" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=ethereum(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :gem_stone: \n")+ethereum(context.user_data.get("lang", None)))
     elif "bitcoin" in message or "بیتکوین" in message or "بیت کوین" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=bitcoin(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :money_bag: \n")+bitcoin(context.user_data.get("lang", None)))
     elif "coin" in message or "سکه" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=coin(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :coin: \n")+coin(context.user_data.get("lang", None)))
     elif "dollar" in message or "دلار" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=dollar(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :United_States: \n")+dollar(context.user_data.get("lang", None)))
     elif "euro" in message or "یورو" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=euro(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :European_Union: \n")+euro(context.user_data.get("lang", None)))
     elif "gold" in message or "طلا" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=gold(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :yellow_circle: \n")+gold(context.user_data.get("lang", None)))
     elif "pound" in message or "پوند" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=pound(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :United_Kingdom: \n")+pound(context.user_data.get("lang", None)))
     elif "lire" in message or "لیر" in message:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=lire(context.user_data.get("lang", None)))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=emoji.emojize(" :Turkey: \n")+lire(context.user_data.get("lang", None)))
     else:
         if context.user_data.get("lang", None) == "pe":
             context.bot.send_message(chat_id=update.effective_chat.id, text="ارزی به این نام یافت نشد")
@@ -253,8 +254,11 @@ if __name__ == "__main__":
     # getting token from file
     with open("token.txt", "rt") as token_file:
         tok = token_file.read()
+
     updater = Updater(token=tok, use_context=True)
+
     updater.start_polling()
+
     dispatcher = updater.dispatcher
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(help_handler)
