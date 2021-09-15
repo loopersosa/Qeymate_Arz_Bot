@@ -1,4 +1,5 @@
 
+
 import telebot, emoji, requests, jdatetime
 from keep import keep_alive
 import datetime
@@ -156,7 +157,7 @@ def start(message):
     user_id = message.from_user.username
 
     if user_id != None:
-      info_line = first_name + " " + user_id + " " + jdatetime.datetime.now().strftime("%c") + "\n"
+      info_line = first_name + " " + user_id + " " + jdatetime.datetime.now(timezone("Asia/Tehran")).strftime("%c") + "\n"
       people.writelines(info_line)
     else:
       info_line = first_name + " " + jdatetime.datetime.now().strftime("%c") + "\n"
@@ -198,18 +199,15 @@ def PAV_handler(message):
 @bot.message_handler(content_types=['animation'])
 def gif_handler(message):
     bot.reply_to(message, text="(@magatowski) گیف هاتو بفرست برای مهدی ")
-'''while True:
+while True:
   try:
-    bot.stop_polling()
-    bot.remove_webhook()
     keep_alive()
     bot.infinity_polling()
-  except Exception as e:
-    logging.info(e)
+  except OSError:
     bot.remove_webhook()  
     keep_alive()
     bot.stop_polling()
-    bot.infinity_polling()'''
+    bot.infinity_polling()
 
 keep_alive()  
 bot.infinity_polling()
