@@ -1,7 +1,8 @@
-from os import times
+
 import telebot, emoji, requests, jdatetime
-from telebot import types
 from keep import keep_alive
+import datetime
+from pytz import timezone
 
 # importing token
 with open("token.txt", "r") as p:
@@ -21,7 +22,8 @@ def main(message):
     # time = datetime.datetime.now().strftime("\n%X") + emoji.emojize(" :watch: ") + datetime.datetime.now().strftime("\n%x") + emoji.emojize(" :calendar: ") 
     # saat = datetime.datetime.now().strftime("%X")
     jdatetime.set_locale('fa_IR')
-    time =jdatetime.datetime.now().strftime("%c")
+    time =jdatetime.datetime.now(timezone("Asia/Tehran")).strftime("%c")
+    #time = datetime.datetime.now(timezone("Asia/Tehran")).strftime("%c")
     if "eth" in message or "اتر" in message:
         bot.send_message( chat_id=chat_ID , text=emoji.emojize(" :gem_stone: ")+ ethereum() +"\n"+time)
     elif "bitcoin" in message or "بیتکوین" in message or "بیت کوین" in message:
@@ -167,15 +169,15 @@ def start(message):
 @bot.message_handler(commands=['help', 'Help'])
 def help(message):
     vertical_list_currencies = emoji.emojize(" :yellow_circle: طلا\n") + emoji.emojize(" :United_States: دلار\n") + emoji.emojize(" :gem_stone: اتریوم\n") +emoji.emojize(" :money_bag: بیتکوین\n") + emoji.emojize(" :Iran: سکه\n") + emoji.emojize(" :United_Kingdom: پوند\n") +emoji.emojize(" :European_Union: یورو\n") + emoji.emojize(" :Turkey: لیر\n")
-    markup = types.ReplyKeyboardMarkup()
-    dollar = types.KeyboardButton(emoji.emojize(" :United_States: دلار\n"))
-    pound = types.KeyboardButton(emoji.emojize(" :United_Kingdom: پوند\n"))
-    lire = types.KeyboardButton(emoji.emojize(" :Turkey: لیر\n"))
-    coin = types.KeyboardButton(emoji.emojize(" :Iran: سکه\n"))
-    gold = types.KeyboardButton(emoji.emojize(" :yellow_circle: طلا\n"))
-    bitcoin = types.KeyboardButton(emoji.emojize(" :money_bag: بیتکوین\n"))
-    eth = types.KeyboardButton(emoji.emojize(" :gem_stone: اتریوم\n"))
-    euro = types.KeyboardButton(emoji.emojize(" :European_Union: یورو\n"))
+    markup = telebot.types.ReplyKeyboardMarkup()
+    dollar = telebot.types.KeyboardButton(emoji.emojize(" :United_States: دلار\n"))
+    pound = telebot.types.KeyboardButton(emoji.emojize(" :United_Kingdom: پوند\n"))
+    lire = telebot.types.KeyboardButton(emoji.emojize(" :Turkey: لیر\n"))
+    coin = telebot.types.KeyboardButton(emoji.emojize(" :Iran: سکه\n"))
+    gold = telebot.types.KeyboardButton(emoji.emojize(" :yellow_circle: طلا\n"))
+    bitcoin = telebot.types.KeyboardButton(emoji.emojize(" :money_bag: بیتکوین\n"))
+    eth = telebot.types.KeyboardButton(emoji.emojize(" :gem_stone: اتریوم\n"))
+    euro = telebot.types.KeyboardButton(emoji.emojize(" :European_Union: یورو\n"))
     markup.row(dollar, euro)
     markup.row(coin, gold)
     markup.row(bitcoin, pound, lire, eth)
@@ -211,5 +213,4 @@ def gif_handler(message):
 
 keep_alive()  
 bot.infinity_polling()
-
 
