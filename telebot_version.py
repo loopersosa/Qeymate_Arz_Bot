@@ -1,26 +1,27 @@
 
-
 import telebot, emoji, requests, jdatetime
-from keep import keep_alive
+#from keep import keep_alive
 import datetime
 from pytz import timezone
 
 # importing token
-with open("token.txt", "r") as p:
+'''with open("token.txt", "r") as p:
     TOKEN = p.read()
-    #print(TOKEN)
+    #print(TOKEN)'''
 
-# initializing bot    
+TOKEN = "1962064466:AAGpXEtN5EZh7JWtBxYUSN7r9BEmtl0b7bM"
+
+# initializing bot
 bot = telebot.TeleBot(TOKEN)
 
 
 
 def main(message):
-    
+
     #print(message)
     chat_ID = message.chat.id
     message = message.text.lower()
-    # time = datetime.datetime.now().strftime("\n%X") + emoji.emojize(" :watch: ") + datetime.datetime.now().strftime("\n%x") + emoji.emojize(" :calendar: ") 
+    # time = datetime.datetime.now().strftime("\n%X") + emoji.emojize(" :watch: ") + datetime.datetime.now().strftime("\n%x") + emoji.emojize(" :calendar: ")
     # saat = datetime.datetime.now().strftime("%X")
     jdatetime.set_locale('fa_IR')
     time =jdatetime.datetime.now(timezone("Asia/Tehran")).strftime("%c")
@@ -35,7 +36,7 @@ def main(message):
         bot.send_message(chat_id=chat_ID, text=emoji.emojize(" :United_States: ")+dollar()+"\n"+time)
     elif "euro" in message or "یورو" in message:
         bot.send_message(chat_id=chat_ID, text=emoji.emojize(" :European_Union: ")+euro()+"\n"+time)
-    elif "gold" in message or "طلا" in message:    
+    elif "gold" in message or "طلا" in message:
         bot.send_message(chat_id=chat_ID, text=emoji.emojize(" :yellow_circle: ")+gold()+"\n"+time)
     elif "pound" in message or "پوند" in message:
         bot.send_message(chat_id=chat_ID, text=emoji.emojize(" :United_Kingdom: ")+pound()+"\n"+time)
@@ -73,7 +74,7 @@ def coin():
     price_1 = give_price_websites_1("https://www.tgju.org/profile/sekeb")
     price_2 = give_price_websites_1("https://www.tgju.org/profile/nim")
     price_3 = give_price_websites_1("https://www.tgju.org/profile/rob")
-    output_1 = "سکه\n\n  سکه تمام بهار آزادی : " + format(price_1 / 10000000, '.3f') + " میلیون تومان\n"       
+    output_1 = "سکه\n\n  سکه تمام بهار آزادی : " + format(price_1 / 10000000, '.3f') + " میلیون تومان\n"
     output_2 = "                 نیم سکه :  " + format(price_2 / 10000000, '.3f')+ " " + " میلیون تومان\n"
     output_3 = "                 ربع سکه :  " + format(price_3 / 10000000, '.3f') + " " + " میلیون تومان\n"
     return output_1 + output_2 + output_3
@@ -150,9 +151,9 @@ def start(message):
 
   # to know who visited the bot
   jdatetime.set_locale('fa_IR')
-  
+
   with open("names.txt", "a") as people:
-    
+
     first_name = message.from_user.first_name
     user_id = message.from_user.username
 
@@ -199,16 +200,18 @@ def PAV_handler(message):
 @bot.message_handler(content_types=['animation'])
 def gif_handler(message):
     bot.reply_to(message, text="(@magatowski) گیف هاتو بفرست برای مهدی ")
-while True:
+'''while True:
   try:
     keep_alive()
     bot.infinity_polling()
   except OSError:
-    bot.remove_webhook()  
+    bot.remove_webhook()
     keep_alive()
     bot.stop_polling()
-    bot.infinity_polling()
+    bot.infinity_polling()'''
 
-keep_alive()  
-bot.infinity_polling()
-
+#keep_alive()
+try:
+    bot.polling()
+except Exception:
+    time.sleep(15)
